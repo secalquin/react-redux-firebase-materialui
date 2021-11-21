@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -17,6 +17,8 @@ import { Alert } from "@mui/material";
 const theme = createTheme();
 
 export default function Login() {
+  const [form, setForm] = useState({ email: "", password: "" });
+
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -25,6 +27,18 @@ export default function Login() {
       email: data.get("email"),
       password: data.get("password"),
     });
+  };
+
+  const handleRememberAccount = (e) => {
+    localStorage.setItem("remember", e.target.value);
+
+    if (e.target.checked) {
+      localStorage.setItem("remember_user", form.email);
+      localStorage.setItem("remember_user_password", form.password);
+    } else {
+      localStorage.removeItem("remember_user");
+      localStorage.removeItem("remember_user_password");
+    }
   };
 
   return (
@@ -58,6 +72,7 @@ export default function Login() {
             }}
             border="none"
             boxShadow="0 0 25px gray"
+            borderRadius="3px"
           >
             <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
               <LockOutlinedIcon />
@@ -80,6 +95,7 @@ export default function Login() {
                 name="email"
                 autoComplete="email"
                 autoFocus
+                onChange={(e) => setForm({ email: e.target.value })}
               />
               <TextField
                 margin="normal"
@@ -92,7 +108,13 @@ export default function Login() {
                 autoComplete="current-password"
               />
               <FormControlLabel
-                control={<Checkbox value="remember" color="primary" />}
+                control={
+                  <Checkbox
+                    onChange={handleRememberAccount}
+                    value="remember"
+                    color="primary"
+                  />
+                }
                 label="Remember me"
               />
               <Button
