@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -13,29 +13,64 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Copyright from "../../components/Copyright";
-import { Alert } from "@mui/material";
 const theme = createTheme();
 
 export default function Login() {
-  const [form, setForm] = useState({ email: "", password: "" });
+  const [form, setForm] = useState({
+    email: "",
+    password: "",
+    remember: false,
+  });
+
+  const [hasError, setHasError] = useState({
+    email: false,
+    password: false,
+  });
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    // eslint-disable-next-line no-console
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
+    cleanAllErrors();
+    handleRememberAccount();
+    if (!form.email || !form.password) {
+      return setHasError({
+        ...form,
+        email: !form.email ? true : false,
+        password: !form.password ? true : false,
+      });
+    }
+  };
+
+  const cleanAllErrors = () => {
+    setHasError({
+      ...form,
+      email: false,
+      password: false,
     });
   };
 
-  const handleRememberAccount = (e) => {
-    localStorage.setItem("remember", e.target.value);
+  useEffect(() => {
+    const remember = localStorage.getItem("remember") === "true" ? true : false;
+    if (remember) {
+      const remember_user = localStorage.getItem("remember_user");
+      const remember_user_password = localStorage.getItem(
+        "remember_user_password"
+      );
+      setForm({
+        email: remember_user,
+        password: remember_user_password,
+        remember: remember,
+      });
+    }
+  }, []);
 
-    if (e.target.checked) {
+  const handleRememberAccount = () => {
+    if (form.remember) {
+      localStorage.setItem("remember", true);
       localStorage.setItem("remember_user", form.email);
       localStorage.setItem("remember_user_password", form.password);
     } else {
+      //setForm({ ...form, remember: false });
+      localStorage.setItem("remember", false);
       localStorage.removeItem("remember_user");
       localStorage.removeItem("remember_user_password");
     }
@@ -93,9 +128,10 @@ export default function Login() {
                 id="email"
                 label="Email Address"
                 name="email"
-                autoComplete="email"
-                autoFocus
-                onChange={(e) => setForm({ email: e.target.value })}
+                error={hasError.email}
+                value={form.email}
+                autoComplete="off"
+                onChange={(e) => setForm({ ...form, email: e.target.value })}
               />
               <TextField
                 margin="normal"
@@ -104,15 +140,21 @@ export default function Login() {
                 name="password"
                 label="Password"
                 type="password"
+                error={hasError.password}
                 id="password"
-                autoComplete="current-password"
+                value={form.password}
+                autoComplete="off"
+                onChange={(e) => setForm({ ...form, password: e.target.value })}
               />
               <FormControlLabel
                 control={
                   <Checkbox
-                    onChange={handleRememberAccount}
+                    onChange={(e) =>
+                      setForm({ ...form, remember: e.target.checked })
+                    }
                     value="remember"
                     color="primary"
+                    checked={form.remember}
                   />
                 }
                 label="Remember me"
