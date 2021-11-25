@@ -4,22 +4,19 @@ import { useSelector } from "react-redux";
 
 import Login from "./pages/Login";
 import Home from "./pages/Home";
-
 function App() {
   const stateUser = useSelector((state) => state.user);
 
   return (
     <BrowserRouter>
-      <div>
-        <Routes>
-          <Route exact path="/" element={<Login />} />
-          <Route
-            exact
-            path="/home"
-            element={!stateUser.isLoggedIn ? <Navigate to={"/"} /> : <Home />}
-          ></Route>
-        </Routes>
-      </div>
+      <Routes>
+        <Route exact path="/" element={<Login />} />
+        <Route
+          exact
+          path="/home"
+          element={!stateUser.isLoggedIn ? <Navigate to={"/"} /> : <Home />}
+        ></Route>
+      </Routes>
     </BrowserRouter>
   );
 }

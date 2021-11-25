@@ -13,9 +13,15 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Copyright from "../../components/Copyright";
+import { useDispatch, useSelector } from "react-redux";
+import { Navigate } from "react-router-dom";
+import { LoginAction } from "../../redux/actions/user/loginAction";
+
 const theme = createTheme();
 
 export default function Login() {
+  const dispatch = useDispatch();
+  const currentUser = useSelector((store) => store.user);
   const [form, setForm] = useState({
     email: "",
     password: "",
@@ -38,6 +44,8 @@ export default function Login() {
         password: !form.password ? true : false,
       });
     }
+
+    dispatch(LoginAction(form.email, form.password));
   };
 
   const cleanAllErrors = () => {
@@ -46,6 +54,19 @@ export default function Login() {
       email: false,
       password: false,
     });
+  };
+
+  const handleRememberAccount = () => {
+    if (form.remember) {
+      localStorage.setItem("remember", true);
+      localStorage.setItem("remember_user", form.email);
+      localStorage.setItem("remember_user_password", form.password);
+    } else {
+      //setForm({ ...form, remember: false });
+      localStorage.setItem("remember", false);
+      localStorage.removeItem("remember_user");
+      localStorage.removeItem("remember_user_password");
+    }
   };
 
   useEffect(() => {
@@ -63,18 +84,9 @@ export default function Login() {
     }
   }, []);
 
-  const handleRememberAccount = () => {
-    if (form.remember) {
-      localStorage.setItem("remember", true);
-      localStorage.setItem("remember_user", form.email);
-      localStorage.setItem("remember_user_password", form.password);
-    } else {
-      //setForm({ ...form, remember: false });
-      localStorage.setItem("remember", false);
-      localStorage.removeItem("remember_user");
-      localStorage.removeItem("remember_user_password");
-    }
-  };
+  if (currentUser.isLoggedIn) {
+    return <Navigate to="/home" />;
+  }
 
   return (
     <ThemeProvider theme={theme}>
