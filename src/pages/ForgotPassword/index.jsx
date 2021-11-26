@@ -1,17 +1,41 @@
 import {
   Avatar,
   Button,
+  CircularProgress,
   Grid,
   Link,
   Paper,
   TextField,
   Typography,
 } from "@mui/material";
+import { Link as LinkRedirect } from "react-router-dom";
 import { Box } from "@mui/system";
 import PasswordIcon from "@mui/icons-material/Password";
 import Copyright from "../../components/Copyright";
+import { useState } from "react";
 
 const ForgotPassword = () => {
+  const [loading, setLoading] = useState({
+    isloading: false,
+    message: "Reset Password",
+  });
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    setLoading({
+      ...loading,
+      isloading: true,
+      message: "Loading...",
+    });
+
+    setTimeout(() => {
+      setLoading({
+        isloading: false,
+        message: "Reset Password",
+      });
+    }, 2000);
+  };
+
   return (
     <Grid
       container
@@ -43,7 +67,12 @@ const ForgotPassword = () => {
           <Typography component="h1" variant="h5">
             Forgot Password
           </Typography>
-          <Box component="form" noValidate sx={{ mt: 3, p: 1 }}>
+          <Box
+            component="form"
+            onSubmit={handleSubmit}
+            noValidate
+            sx={{ mt: 3, p: 1 }}
+          >
             <TextField
               required
               fullWidth
@@ -53,16 +82,18 @@ const ForgotPassword = () => {
               autoComplete="off"
             />
             <Button
+              disabled={loading.isloading ?? false}
               type="submit"
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              Reset Password
+              {loading.message}
+              {loading.isloading && <CircularProgress size={20} />}
             </Button>
             <Grid container>
               <Grid item xs>
-                <Link href="/" variant="button">
+                <Link component={LinkRedirect} to="/" variant="button">
                   Back
                 </Link>
               </Grid>

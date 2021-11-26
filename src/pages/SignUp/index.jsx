@@ -7,6 +7,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import { Link as LinkRedirect } from "react-router-dom";
 import { Box } from "@mui/system";
 import PasswordIcon from "@mui/icons-material/Password";
 import Copyright from "../../components/Copyright";
@@ -80,7 +81,7 @@ const SignUp = () => {
             </Button>
             <Grid container>
               <Grid item xs>
-                <Link href="/" variant="button">
+                <Link component={LinkRedirect} to="/" variant="button">
                   Back
                 </Link>
               </Grid>

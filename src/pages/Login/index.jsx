@@ -13,7 +13,7 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Copyright from "../../components/Copyright";
 import { useDispatch, useSelector } from "react-redux";
-import { Navigate } from "react-router-dom";
+import { Navigate, Link as LinkRedirect } from "react-router-dom";
 import { LoginAction } from "../../redux/actions/user/loginAction";
 
 export default function Login() {
@@ -177,12 +177,16 @@ export default function Login() {
             </Button>
             <Grid container>
               <Grid item xs>
-                <Link href="/forgot-password" variant="body2">
+                <Link
+                  component={LinkRedirect}
+                  to="/forgot-password"
+                  variant="body2"
+                >
                   Forgot password?
                 </Link>
               </Grid>
               <Grid item>
-                <Link href="/signup" variant="body2">
+                <Link component={LinkRedirect} to="/signup" variant="body2">
                   {"Don't have an account? Sign Up"}
                 </Link>
               </Grid>
