@@ -64,7 +64,7 @@ const ForgotPassword = () => {
             <Grid container>
               <Grid item xs>
                 <Link href="/" variant="button">
-                  Volver
+                  Back
                 </Link>
               </Grid>
             </Grid>
