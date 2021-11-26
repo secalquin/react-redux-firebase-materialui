@@ -15,6 +15,7 @@ import Copyright from "../../components/Copyright";
 import { useDispatch, useSelector } from "react-redux";
 import { Navigate, Link as LinkRedirect } from "react-router-dom";
 import { LoginAction } from "../../redux/actions/user/loginAction";
+import { auth, provider } from "../../config/firebase";
 
 export default function Login() {
   const dispatch = useDispatch();
@@ -30,7 +31,7 @@ export default function Login() {
     password: false,
   });
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     cleanAllErrors();
     handleRememberAccount();
@@ -41,8 +42,14 @@ export default function Login() {
         password: !form.password ? true : false,
       });
     }
-
-    dispatch(LoginAction(form.email, form.password));
+    auth
+      .signInWithPopup(provider)
+      .then((result) => {
+        console.log(result);
+      })
+      .catch((error) => {
+        console.log(error.message);
+      });
   };
 
   const cleanAllErrors = () => {
