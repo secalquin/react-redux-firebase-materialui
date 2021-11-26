@@ -11,7 +11,7 @@ import { Box } from "@mui/system";
 import PasswordIcon from "@mui/icons-material/Password";
 import Copyright from "../../components/Copyright";
 
-const ForgotPassword = () => {
+const SignUp = () => {
   return (
     <Grid
       container
@@ -41,14 +41,32 @@ const ForgotPassword = () => {
             <PasswordIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Forgot Password
+            Sign Up
           </Typography>
           <Box component="form" noValidate sx={{ mt: 3, p: 1 }}>
             <TextField
               required
               fullWidth
+              name="name"
+              label="Name"
+              id="name"
+              autoComplete="off"
+            />
+            <TextField
+              sx={{ mt: 1 }}
+              required
+              fullWidth
               name="email"
               label="Email"
+              id="email"
+              autoComplete="off"
+            />
+            <TextField
+              sx={{ mt: 1 }}
+              required
+              fullWidth
+              name="password"
+              label="Password"
               id="password"
               autoComplete="off"
             />
@@ -75,4 +93,4 @@ const ForgotPassword = () => {
   );
 };
 
-export default ForgotPassword;
+export default SignUp;
