@@ -15,7 +15,7 @@ const HomePage = (props) => {
             height: 150,
           }}
         >
-          <h1>Home Page</h1>
+          <h1>Home</h1>
         </Paper>
       </Grid>
     </Grid>

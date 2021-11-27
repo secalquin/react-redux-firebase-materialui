@@ -16,6 +16,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { Navigate, Link as LinkRedirect } from "react-router-dom";
 import { LoginAction } from "../../redux/actions/user/loginAction";
 import { auth, provider } from "../../config/firebase";
+import { ButtonGmail } from "../../components/Button";
+import GoogleIcon from "@mui/icons-material/Google";
 
 export default function Login() {
   const dispatch = useDispatch();
@@ -42,10 +44,16 @@ export default function Login() {
         password: !form.password ? true : false,
       });
     }
+
+    dispatch(LoginAction(form.email, form.password));
+  };
+
+  const handleClickGoogleLogin = async (event) => {
     auth
       .signInWithPopup(provider)
       .then((result) => {
-        console.log(result);
+        const user = auth.currentUser;
+        console.log(user);
       })
       .catch((error) => {
         console.log(error.message);
@@ -182,6 +190,15 @@ export default function Login() {
             >
               Sign In
             </Button>
+            <ButtonGmail
+              type="button"
+              fullWidth
+              variant="contained"
+              sx={{ mt: 0, mb: 2 }}
+              onClick={handleClickGoogleLogin}
+            >
+              Sign In With <GoogleIcon sx={{ ml: "5px" }} />
+            </ButtonGmail>
             <Grid container>
               <Grid item xs>
                 <Link
