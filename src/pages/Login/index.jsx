@@ -1,16 +1,15 @@
 import React, { useEffect, useState } from "react";
-import Avatar from "@mui/material/Avatar";
 import CssBaseline from "@mui/material/CssBaseline";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import Typography from "@mui/material/Typography";
+
 import { useDispatch, useSelector } from "react-redux";
 import { LoginAction } from "../../redux/actions/user/loginAction";
 import { auth, provider } from "../../config/firebase";
 import NormalForm from "./normalForm";
 import { Navigate } from "react-router-dom";
+import GoogleForm from "./googleForm";
 
 export default function Login() {
   const dispatch = useDispatch();
@@ -20,6 +19,8 @@ export default function Login() {
     password: "",
     remember: false,
   });
+
+  const [step, setStep] = useState(0);
 
   const [hasError, setHasError] = useState({
     email: false,
@@ -44,9 +45,11 @@ export default function Login() {
   const handleClickGoogleLogin = async (event) => {
     auth
       .signInWithPopup(provider)
-      .then((result) => {
-        const user = auth.currentUser;
-        console.log(user);
+      .then(() => {
+        if (auth.currentUser) {
+          setForm({ ...form, email: auth.currentUser.email });
+          setStep(1);
+        }
       })
       .catch((error) => {
         console.log(error.message);
@@ -125,19 +128,24 @@ export default function Login() {
           boxShadow="0 0 25px gray"
           borderRadius="3px"
         >
-          <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-            <LockOutlinedIcon />
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            Sign in
-          </Typography>
-          <NormalForm
-            handleSubmit={handleSubmit}
-            hasError={hasError}
-            setForm={setForm}
-            form={form}
-            handleClickGoogleLogin={handleClickGoogleLogin}
-          />
+          {!step ? (
+            <NormalForm
+              handleSubmit={handleSubmit}
+              hasError={hasError}
+              setForm={setForm}
+              form={form}
+              handleClickGoogleLogin={handleClickGoogleLogin}
+              setStep={setStep}
+            />
+          ) : (
+            <GoogleForm
+              handleSubmit={handleSubmit}
+              hasError={hasError}
+              setForm={setForm}
+              form={form}
+              setStep={setStep}
+            />
+          )}
         </Box>
       </Grid>
     </Grid>
