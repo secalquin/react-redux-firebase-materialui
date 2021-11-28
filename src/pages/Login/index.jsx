@@ -1,23 +1,16 @@
 import React, { useEffect, useState } from "react";
 import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
-import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
-import Link from "@mui/material/Link";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
-import Copyright from "../../components/Copyright";
 import { useDispatch, useSelector } from "react-redux";
-import { Navigate, Link as LinkRedirect } from "react-router-dom";
 import { LoginAction } from "../../redux/actions/user/loginAction";
 import { auth, provider } from "../../config/firebase";
-import { ButtonGmail } from "../../components/Button";
-import GoogleIcon from "@mui/icons-material/Google";
+import NormalForm from "./normalForm";
+import { Navigate } from "react-router-dom";
 
 export default function Login() {
   const dispatch = useDispatch();
@@ -36,7 +29,6 @@ export default function Login() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     cleanAllErrors();
-    handleRememberAccount();
     if (!form.email || !form.password) {
       return setHasError({
         ...form,
@@ -44,6 +36,7 @@ export default function Login() {
         password: !form.password ? true : false,
       });
     }
+    handleRememberAccount(form);
 
     dispatch(LoginAction(form.email, form.password));
   };
@@ -68,11 +61,11 @@ export default function Login() {
     });
   };
 
-  const handleRememberAccount = () => {
+  const handleRememberAccount = ({ email, password }) => {
     if (form.remember) {
       localStorage.setItem("remember", true);
-      localStorage.setItem("remember_user", form.email);
-      localStorage.setItem("remember_user_password", form.password);
+      localStorage.setItem("remember_user", email);
+      localStorage.setItem("remember_user_password", password);
     } else {
       //setForm({ ...form, remember: false });
       localStorage.setItem("remember", false);
@@ -138,85 +131,13 @@ export default function Login() {
           <Typography component="h1" variant="h5">
             Sign in
           </Typography>
-          <Box
-            component="form"
-            noValidate
-            onSubmit={handleSubmit}
-            sx={{ p: 1.5 }}
-          >
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="email"
-              label="Email Address"
-              name="email"
-              error={hasError.email}
-              value={form.email}
-              autoComplete="off"
-              onChange={(e) => setForm({ ...form, email: e.target.value })}
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="Password"
-              type="password"
-              error={hasError.password}
-              id="password"
-              value={form.password}
-              autoComplete="off"
-              onChange={(e) => setForm({ ...form, password: e.target.value })}
-            />
-            <FormControlLabel
-              control={
-                <Checkbox
-                  onChange={(e) =>
-                    setForm({ ...form, remember: e.target.checked })
-                  }
-                  value="remember"
-                  color="primary"
-                  checked={form.remember}
-                />
-              }
-              label="Remember me"
-            />
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-            >
-              Sign In
-            </Button>
-            <ButtonGmail
-              type="button"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 0, mb: 2 }}
-              onClick={handleClickGoogleLogin}
-            >
-              Sign In With <GoogleIcon sx={{ ml: "5px" }} />
-            </ButtonGmail>
-            <Grid container>
-              <Grid item xs>
-                <Link
-                  component={LinkRedirect}
-                  to="/forgot-password"
-                  variant="body2"
-                >
-                  Forgot password?
-                </Link>
-              </Grid>
-              <Grid item>
-                <Link component={LinkRedirect} to="/signup" variant="body2">
-                  {"Don't have an account? Sign Up"}
-                </Link>
-              </Grid>
-            </Grid>
-            <Copyright sx={{ mt: 5 }} />
-          </Box>
+          <NormalForm
+            handleSubmit={handleSubmit}
+            hasError={hasError}
+            setForm={setForm}
+            form={form}
+            handleClickGoogleLogin={handleClickGoogleLogin}
+          />
         </Box>
       </Grid>
     </Grid>
