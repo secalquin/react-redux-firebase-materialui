@@ -9,6 +9,11 @@ function GoogleForm({ handleSubmit, setForm, hasError, form, setStep }) {
       .signOut()
       .then(() => {
         setStep(0);
+        return setForm({
+          email: "",
+          password: "",
+          remember: false,
+        });
       })
       .catch((error) => console.log(error));
   };
