@@ -1,4 +1,5 @@
 import {
+  Alert,
   Avatar,
   Button,
   CircularProgress,
@@ -20,8 +21,21 @@ const ForgotPassword = () => {
     message: "Reset Password",
   });
 
+  const [form, setForm] = useState({
+    email: { value: "", error: false, message: "", isReset: false },
+  });
+
   const handleSubmit = (event) => {
     event.preventDefault();
+    setForm({ ...form, email: { error: false, isReset: false } });
+
+    if (!form.email.value) {
+      return setForm({
+        ...form,
+        email: { error: true, message: "Email is required." },
+      });
+    }
+
     setLoading({
       ...loading,
       isloading: true,
@@ -33,6 +47,7 @@ const ForgotPassword = () => {
         isloading: false,
         message: "Reset Password",
       });
+      setForm({ ...form, email: { isReset: true } });
     }, 2000);
   };
 
@@ -67,11 +82,18 @@ const ForgotPassword = () => {
           <Typography component="h1" variant="h5">
             Forgot Password
           </Typography>
+          {form.email.isReset && (
+            <Box sx={{ mt: 2, width: "80%" }}>
+              <Alert severity="success">
+                If your email is correct, you will receive your new password.
+              </Alert>
+            </Box>
+          )}
           <Box
             component="form"
             onSubmit={handleSubmit}
             noValidate
-            sx={{ mt: 3, p: 1 }}
+            sx={{ mt: 2, p: 1 }}
           >
             <TextField
               required
@@ -79,7 +101,14 @@ const ForgotPassword = () => {
               name="email"
               label="Email"
               id="password"
+              error={form.email.error}
               autoComplete="off"
+              onChange={(e) =>
+                setForm({
+                  ...form,
+                  email: { value: e.target.value },
+                })
+              }
             />
             <Button
               disabled={loading.isloading ?? false}

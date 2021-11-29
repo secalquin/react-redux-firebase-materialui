@@ -60,7 +60,7 @@ const Drawer = styled(MuiDrawer, {
 }));
 
 const Navbar = (props) => {
-  const [open, setOpen] = React.useState(true);
+  const [open, setOpen] = React.useState(false);
   const toggleDrawer = () => {
     setOpen(!open);
   };
