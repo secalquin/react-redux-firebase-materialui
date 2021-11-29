@@ -24,7 +24,7 @@ function GoogleForm({ handleSubmit, setForm, hasError, form, setStep }) {
         src={auth.currentUser.photoURL}
         sx={{ m: 1, bgcolor: "secondary.main" }}
       />
-      <Typography component="h1" variant="h5">
+      <Typography component="h1" variant="h6">
         Welcome, {auth.currentUser.displayName}
       </Typography>
       <Box component="form" noValidate onSubmit={handleSubmit} sx={{ p: 1.5 }}>
